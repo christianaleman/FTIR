@@ -1,3 +1,3 @@
 # README #
 
-Put something here, of niet misschien
+Put something here, of niet
