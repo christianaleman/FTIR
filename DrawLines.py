@@ -24,13 +24,13 @@ def plot_lines(sumcalspectra, samplespectra):
     plt.figure(1)  # the first figure
     plt.subplot(221)  # the first subplot in the first figure
     plt.title("Sample")
-    plt.plot(xsamp, ysamp, 'b-')
+    plt.scatter(xsamp, ysamp, color = 'red')
     plt.subplot(222)  # the second subplot in the first figure
     plt.title("Calibration files")
-    plt.plot(xcal, ycal, "r-")
+    plt.scatter(xcal, ycal, color = 'blue')
     plt.subplot(223)
     plt.title("Residue")
-    plt.plot(xsamp, residue, "g--")
+    plt.scatter(xsamp, residue, color = 'green')
 
     #plt.plot(xsamp, ysamp, 'b-' , xcal, ycal, "r-", xsamp , residue , "g--")
     plt.show()
