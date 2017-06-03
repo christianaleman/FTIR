@@ -11,5 +11,5 @@ for x in range(0, 50):
     es.calculate_fitness()
     es.select()
 
-print es.population.solutions[0].f_y
-print es.population.solutions[0].y
+print(es.population.solutions[0].f_y)
+print(es.population.solutions[0].y)

@@ -5,12 +5,13 @@ from operator import attrgetter
 
 
 class EvolutionStrategy:
-    def __init__(self, mu, lambda_, tau):
+    def __init__(self, mu, lambda_, tau, fitness_calculator):
         self.mu = mu
         self.lambda_ = lambda_
         self.tau = tau
         self.population = None
         self.mutator = Mutator(tau)
+        self.fitness_calculator = fitness_calculator
 
     def init_population(self, sigma, molecules):
         self.population = Population(
@@ -27,14 +28,15 @@ class EvolutionStrategy:
         self.population = Population(
             [
                 self.mutator.apply_to(solution)
-                for x in range(0, self.lambda_ / self.mu)
+                for x in range(0, self.lambda_ // self.mu)
                 for solution in self.population.solutions
             ]
         )
 
     def calculate_fitness(self):
         for solution in self.population.solutions:
-            solution.f_y = sum([abs(10 - solution.y[key]) for key in solution.y])
+            solution.f_y = self.fitness_calculator.calculate(solution.y)
+            # sum([abs(10 - solution.y[key]) for key in solution.y])
 
     def select(self):
         self.population.solutions.sort(key=attrgetter('f_y'))
