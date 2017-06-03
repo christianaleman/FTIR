@@ -23,7 +23,7 @@ class Molecule:
         concentrations_used_in_calfiles = []
         counter_concentrations = 0
         for item in range(1, number_of_calibration_files):
-            concentrations_used_in_calfiles.append(int(f[counter_concentrations + 1]))
+            concentrations_used_in_calfiles.append(float(f[counter_concentrations + 1]))
             counter_concentrations += 1
         # Reading the complete calibration file line by line and storing it in a dictionary {wavenumber, [c0,c1,...,cn]}
         spectrum = {}

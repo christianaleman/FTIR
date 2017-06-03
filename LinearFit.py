@@ -1,5 +1,9 @@
 def Linearfit(molecule_concentrations, molecule_spectra):
     new_spectra_list = {}
+    low_value_calibrationlist = 0
+    low_value = 0
+    high_value_calibrationlist = 0
+    high_value = 0
     for key,value in molecule_concentrations.items():
         new_spectra_list_per_component ={}
         kalibratielijst = molecule_spectra[key][1]

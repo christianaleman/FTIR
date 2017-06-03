@@ -1,5 +1,5 @@
 CO
-Golfgetal [cm-1]	ppm		ppm	ppm	ppm	ppm
+Golfgetal [cm-1]	ppm
 cm-1	0	20	50  100
  594.44	0	-0.006958	-0.013857	-0.006992
  602.16	0	-0.005331	-0.020497	-0.010278

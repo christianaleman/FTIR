@@ -1,5 +1,5 @@
 NH3
-Golfgetal [cm-1]	ppm		ppm	ppm	ppm	ppm
+Golfgetal [cm-1]	ppm
 cm-1	0	10  20  50
  594.44	0	-0.011906	-0.003443	-0.005247
  602.16	0	-0.006563	-0.009961	0.002144
