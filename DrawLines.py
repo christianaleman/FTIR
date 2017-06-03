@@ -21,5 +21,16 @@ def plot_lines(sumcalspectra, samplespectra):
     for iterator in range(0,len(xcal)):
         residue.append(float(ysamp[iterator])-float(ycal[iterator]))
 
-    plt.plot(xsamp, ysamp, 'b-' , xcal, ycal, "r-", xsamp , residue , "g--")
+    plt.figure(1)  # the first figure
+    plt.subplot(221)  # the first subplot in the first figure
+    plt.title("Sample")
+    plt.plot(xsamp, ysamp, 'b-')
+    plt.subplot(222)  # the second subplot in the first figure
+    plt.title("Calibration files")
+    plt.plot(xcal, ycal, "r-")
+    plt.subplot(223)
+    plt.title("Residue")
+    plt.plot(xsamp, residue, "g--")
+
+    #plt.plot(xsamp, ysamp, 'b-' , xcal, ycal, "r-", xsamp , residue , "g--")
     plt.show()
