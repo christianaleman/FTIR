@@ -1,5 +1,8 @@
 from tkinter import *
 from tkinter import ttk
+from ReadSampleFile import *
+from tkinter.filedialog import askopenfilename
+import re
 
 def set_calibration_file(*args):
     molecules_selected = {"CO": CO_entry.get(), "C2H4": C2H4_entry.get(), "NH3": NH3_entry.get(),
@@ -14,14 +17,29 @@ def set_calibration_file(*args):
 def calculate(*args):
     try:
         value = float(number_of_iterarions.get())
-        input_file.set(value)
     except ValueError:
         pass
 
+def read_sample_file(event):
+    filename_open = askopenfilename()
+    filename = open(filename_open, "r")
+    sample_spectrum ={}
+    for line in filename:
+        line = line.rstrip()
+        concentration_per_wavenumber = re.findall('\S*\S', line)
+        key = concentration_per_wavenumber[0]
+        if key != "":
+            value = concentration_per_wavenumber[1]
+            sample_spectrum[key] = value
+        else:
+            continue
+    input_file.set(filename_open)
+    filename.close()
+    return sample_spectrum
 
 #Master frame
 root = Tk()
-root.title("Feet to Meters")
+root.title("FTIR EVOLUTION")
 
 mainframe = ttk.Frame(root, padding="3 3 12 12")
 mainframe.grid(column=0, row=0, sticky=(N, W, E, S))
@@ -32,7 +50,7 @@ mainframe.rowconfigure(0, weight=1)
 input_file = StringVar()
 number_of_iterarions = StringVar()
 
-input_file_entry = ttk.Entry(mainframe, width=7, textvariable=input_file)
+input_file_entry = ttk.Entry(mainframe, width=100, textvariable=input_file)
 input_file_entry.grid(column=2, row=1, sticky=(W, E))
 
 number_of_iterarions_entry = ttk.Entry(mainframe, width=7, textvariable=number_of_iterarions)
@@ -62,5 +80,8 @@ ttk.Button(mainframe, text="Calculate", command=calculate).grid(column=5, row=6,
 
 #Preform calculation
 root.bind('<Return>', calculate)
+
+#Event input sample file name
+input_file_entry.bind('<Button-1>', read_sample_file)
 
 root.mainloop()
