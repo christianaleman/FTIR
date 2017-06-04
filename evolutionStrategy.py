@@ -1,3 +1,5 @@
+from multiprocessing.pool import Pool
+
 from mutator import Mutator
 from population import Population
 from solution import Solution
@@ -12,6 +14,7 @@ class EvolutionStrategy:
         self.population = None
         self.mutator = Mutator(tau)
         self.fitness_calculator = fitness_calculator
+        self.pool = Pool()
 
     def init_population(self, sigma, molecules):
         self.population = Population(
@@ -34,9 +37,12 @@ class EvolutionStrategy:
         )
 
     def calculate_fitness(self):
-        for solution in self.population.solutions:
-            solution.f_y = self.fitness_calculator.calculate(solution.y)
-            # sum([abs(10 - solution.y[key]) for key in solution.y])
+        result = self.pool.map_async(
+            self.fitness_calculator.calculate,
+            [solution.y for solution in self.population.solutions]
+        ).get()
+        for (f_y, solution) in zip(result, self.population.solutions):
+            solution.f_y = f_y
 
     def select(self):
         self.population.solutions.sort(key=attrgetter('f_y'))
