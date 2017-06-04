@@ -29,11 +29,14 @@ class EvolutionStrategy:
 
     def mutate(self):
         self.population = Population(
-            [
-                self.mutator.apply_to(solution)
-                for x in range(0, self.lambda_ // self.mu)
-                for solution in self.population.solutions
-            ]
+            self.pool.map_async(
+                self.mutator.apply_to,
+                [
+                    solution
+                    for x in range(0, self.lambda_ // self.mu)
+                    for solution in self.population.solutions
+                ]
+            ).get()
         )
 
     def calculate_fitness(self):
