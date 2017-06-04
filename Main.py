@@ -13,11 +13,11 @@ if __name__ == '__main__':
     molecule_spectra = input_molecules()
     molecule_concentrations = {}
 
-    molecules = ['H2O', 'CO2']
+    #molecules = ['H2O', 'CO2']
     es = EvolutionStrategy(10, 100, 1.0 / math.sqrt(2 * len(molecule_spectra)), FitnessCalculator(sample_spectrum, molecule_spectra))
     es.init_population(0.1, molecule_spectra.keys())
 
-    for x in range(0, 50):
+    for x in range(0, 100):
         es.mutate()
         es.calculate_fitness()
         es.select()
