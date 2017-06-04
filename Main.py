@@ -8,6 +8,7 @@ from DrawLines import *
 from evolutionStrategy import EvolutionStrategy
 from fitnessCalculator import FitnessCalculator
 
+
 if __name__ == '__main__':
     sample_spectrum = read_sample_file()
     molecule_spectra = input_molecules()
