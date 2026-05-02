@@ -3,25 +3,28 @@ import bisect
 
 def Linearfit(molecule_concentrations, molecule_spectra):
     new_spectra_list = {}
-    for key,value in molecule_concentrations.items():
-        new_spectra_list_per_component ={}
-        kalibratielijst = molecule_spectra[key][1]
+    for mol, value in molecule_concentrations.items():
+        cal_concs = molecule_spectra[mol][1]
 
-        i = bisect.bisect(kalibratielijst, value)
-        low_value = i - 1 if i < len(kalibratielijst) else i - 2
-        high_value = i if i < len(kalibratielijst) else i - 1
-        low_value_calibrationlist = kalibratielijst[low_value]
-        high_value_calibrationlist = kalibratielijst[high_value]
+        i = bisect.bisect(cal_concs, value)
+        if i == 0:
+            lo, hi = 0, min(1, len(cal_concs) - 1)
+        elif i >= len(cal_concs):
+            lo, hi = len(cal_concs) - 2, len(cal_concs) - 1
+        else:
+            lo, hi = i - 1, i
 
-        for iter1, iter2 in molecule_spectra[key][0].items():
-            slope = (float(iter2[high_value])-float(iter2[low_value]))/(float(high_value_calibrationlist)-float(low_value_calibrationlist))
-            intersect = float(iter2[low_value])
-            nieuwe_waarde = slope * (value - low_value_calibrationlist) + intersect
-            new_spectra_list_per_component[iter1] = nieuwe_waarde
+        c_lo = cal_concs[lo]
+        c_hi = cal_concs[hi]
+        denom = c_hi - c_lo
 
-        new_spectra_list[key] = new_spectra_list_per_component
+        component = {}
+        for wn, absorptions in molecule_spectra[mol][0].items():
+            if denom == 0:
+                component[wn] = absorptions[lo]
+            else:
+                component[wn] = absorptions[lo] + (absorptions[hi] - absorptions[lo]) / denom * (value - c_lo)
 
-    return(new_spectra_list)
+        new_spectra_list[mol] = component
 
-
-
+    return new_spectra_list

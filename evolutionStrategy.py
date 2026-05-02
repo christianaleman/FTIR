@@ -1,5 +1,3 @@
-from multiprocessing.pool import Pool
-
 from mutator import Mutator
 from population import Population
 from solution import Solution
@@ -14,38 +12,28 @@ class EvolutionStrategy:
         self.population = None
         self.mutator = Mutator(tau)
         self.fitness_calculator = fitness_calculator
-        self.pool = Pool()
 
     def init_population(self, sigma, molecules):
-        self.population = Population(
-            [
-                Solution(
-                    {key: sigma for key in molecules},
-                    {key: 0 for key in molecules},
-                    None
-                ) for x in range(0, self.mu)
-            ]
-        )
+        self.population = Population([
+            Solution(
+                {key: sigma for key in molecules},
+                {key: 0 for key in molecules},
+                None,
+            ) for _ in range(self.mu)
+        ])
 
     def mutate(self):
-        self.population = Population(
-            self.pool.map_async(
-                self.mutator.apply_to,
-                [
-                    solution
-                    for x in range(0, self.lambda_ // self.mu)
-                    for solution in self.population.solutions
-                ]
-            ).get()
-        )
+        offspring = [
+            self.mutator.apply_to(solution)
+            for _ in range(self.lambda_ // self.mu)
+            for solution in self.population.solutions
+        ]
+        self.population = Population(offspring)
 
     def calculate_fitness(self):
-        result = self.pool.map_async(
-            self.fitness_calculator.calculate,
-            [solution.y for solution in self.population.solutions]
-        ).get()
-        for (f_y, solution) in zip(result, self.population.solutions):
-            solution.f_y = f_y
+        residuals = self.fitness_calculator.calculate_batch(self.population.solutions)
+        for sol, res in zip(self.population.solutions, residuals):
+            sol.f_y = res
 
     def select(self):
         self.population.solutions.sort(key=attrgetter('f_y'))
